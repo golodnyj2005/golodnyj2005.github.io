@@ -6,7 +6,7 @@ function renderNumbers() {
     numbersDiv.innerHTML = '';
     numbers.forEach((taken, i) => {
         const num = document.createElement('div');
-        num.className = number ${taken ? 'taken' : ''};
+        num.className = `number ${taken ? 'taken' : ''}`;
         num.textContent = i + 1;
         if (!taken) num.onclick = () => chooseNumber(i + 1);
         numbersDiv.appendChild(num);
@@ -16,7 +16,15 @@ function renderNumbers() {
 // Выбор номера
 function chooseNumber(num) {
     Telegram.WebApp.sendData(JSON.stringify({ action: 'choose', number: num }));
-    numbers[num - 1] = true;
+    // Локально обновляем, но ждем подтверждения от бэкенда
+}
+
+// Обновление состояния номеров
+function updateNumbers(takenNumbers) {
+    numbers = Array(12).fill(false);
+    takenNumbers.forEach(num => {
+        numbers[num - 1] = true;
+    });
     renderNumbers();
 }
 
@@ -27,10 +35,10 @@ function spinRoulette(winner) {
     const targetAngle = (360 / 12) * (winner - 1);
     const spin = setInterval(() => {
         angle += 10;
-        arrow.style.transform = rotate(${angle}deg);
+        arrow.style.transform = `rotate(${angle}deg)`;
         if (angle >= targetAngle + 720) { // 2 полных оборота + остановка
             clearInterval(spin);
-            Telegram.WebApp.showAlert(Победитель: номер ${winner}!);
+            Telegram.WebApp.showAlert(`Победитель: номер ${winner}!`);
         }
     }, 20);
 }
@@ -40,7 +48,19 @@ Telegram.WebApp.ready();
 Telegram.WebApp.expand();
 renderNumbers();
 
-// Пример получения данных от бэкенда (для теста)
-setTimeout(() => {
-    if (numbers.every(n => n)) spinRoulette(Math.floor(Math.random() * 12) + 1);
-}, 5000); // Тестовая задержка
+// Тестовый механизм для получения данных из чата (временный)
+Telegram.WebApp.onEvent('web_app_data', (event) => {
+    console.log('Получены данные:', event.data);
+    const data = JSON.parse(event.data);
+    if (data.action === 'update') {
+        updateNumbers(data.numbers);
+    } else if (data.action === 'spin') {
+        spinRoulette(data.winner);
+    }
+});
+
+// Пока нет Webhook, используем таймер для теста (удали позже)
+setInterval(() => {
+    // Симуляция получения данных от бота
+    // В реальном проекте это будет через Webhook или polling
+}, 1000);
