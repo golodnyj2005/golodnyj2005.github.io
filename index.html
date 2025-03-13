@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,17 +7,14 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Пьяная рулетка</h1>
-        <div id="roulette-wheel">
-            <!-- Секторы рулетки -->
-        </div>
-        <div id="number-selection">
-            <h2>Выбери свой номер:</h2>
-            <div id="numbers-grid"></div>
-        </div>
-        <button id="start-roulette" disabled>Запустить рулетку</button>
+    <h1>Пьяная рулетка</h1>
+    <p>Лот: Бутылка виски</p>
+    <div class="roulette">
+        <div class="arrow" id="arrow"></div>
     </div>
+    <div class="numbers" id="numbers"></div>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
