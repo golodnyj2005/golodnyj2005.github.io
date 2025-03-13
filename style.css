@@ -1,0 +1,80 @@
+body {
+    background-color: #121212;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+#roulette-wheel {
+    width: 300px;
+    height: 300px;
+    margin: 20px auto;
+    border: 5px solid #ffcc00;
+    border-radius: 50%;
+    position: relative;
+    background: conic-gradient(#ff4d4d, #ffcc00, #4d94ff, #ff4d4d);
+}
+
+#number-selection {
+    margin-top: 20px;
+}
+
+#numbers-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.number {
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    background-color: #333;
+    border: 2px solid #555;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.number:hover {
+    transform: scale(1.1);
+}
+
+.number.selected {
+    background-color: #ffcc00;
+    color: #000;
+    cursor: not-allowed;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #ffcc00;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:disabled {
+    background-color: #ccc;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(1440deg); /* 4 полных оборота */
+    }
+}
+
+#roulette-wheel.spinning {
+    animation: spin 3s ease-out;
+}
