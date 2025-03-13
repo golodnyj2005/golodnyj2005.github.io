@@ -65,16 +65,3 @@ button {
 button:disabled {
     background-color: #ccc;
 }
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(1440deg); /* 4 полных оборота */
-    }
-}
-
-#roulette-wheel.spinning {
-    animation: spin 3s ease-out;
-}
