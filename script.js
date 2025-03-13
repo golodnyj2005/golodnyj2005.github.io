@@ -1,46 +1,46 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const numbersGrid = document.getElementById("numbers-grid");
-    const startButton = document.getElementById("start-roulette");
+const numbersDiv = document.getElementById('numbers');
+let numbers = Array(12).fill(false); // false - свободен, true - занят
 
-    let selectedNumbers = [];
-
-    // Создаем сетку номеров
-    for (let i = 1; i <= 12; i++) {
-        const numberDiv = document.createElement("div");
-        numberDiv.classList.add("number");
-        numberDiv.textContent = i;
-        numberDiv.addEventListener("click", () => selectNumber(i));
-        numbersGrid.appendChild(numberDiv);
-    }
-
-    function selectNumber(number) {
-        if (selectedNumbers.includes(number)) return;
-
-        selectedNumbers.push(number);
-        updateUI();
-
-        // Отправляем выбор на бэкенд через Telegram Web App API
-        Telegram.WebApp.sendData(JSON.stringify({ action: "select_number", number }));
-    }
-
-    function updateUI() {
-        const allNumbers = document.querySelectorAll(".number");
-        allNumbers.forEach((numDiv) => {
-            const num = parseInt(numDiv.textContent);
-            if (selectedNumbers.includes(num)) {
-                numDiv.classList.add("selected");
-            } else {
-                numDiv.classList.remove("selected");
-            }
-        });
-
-        if (selectedNumbers.length === 12) {
-            startButton.disabled = false;
-        }
-    }
-
-    startButton.addEventListener("click", () => {
-        // Отправляем запрос на запуск рулетки
-        Telegram.WebApp.sendData(JSON.stringify({ action: "start_roulette" }));
+// Отображение номеров
+function renderNumbers() {
+    numbersDiv.innerHTML = '';
+    numbers.forEach((taken, i) => {
+        const num = document.createElement('div');
+        num.className = number ${taken ? 'taken' : ''};
+        num.textContent = i + 1;
+        if (!taken) num.onclick = () => chooseNumber(i + 1);
+        numbersDiv.appendChild(num);
     });
-});
+}
+
+// Выбор номера
+function chooseNumber(num) {
+    Telegram.WebApp.sendData(JSON.stringify({ action: 'choose', number: num }));
+    numbers[num - 1] = true;
+    renderNumbers();
+}
+
+// Анимация вращения
+function spinRoulette(winner) {
+    const arrow = document.getElementById('arrow');
+    let angle = 0;
+    const targetAngle = (360 / 12) * (winner - 1);
+    const spin = setInterval(() => {
+        angle += 10;
+        arrow.style.transform = rotate(${angle}deg);
+        if (angle >= targetAngle + 720) { // 2 полных оборота + остановка
+            clearInterval(spin);
+            Telegram.WebApp.showAlert(Победитель: номер ${winner}!);
+        }
+    }, 20);
+}
+
+// Инициализация Telegram Web App
+Telegram.WebApp.ready();
+Telegram.WebApp.expand();
+renderNumbers();
+
+// Пример получения данных от бэкенда (для теста)
+setTimeout(() => {
+    if (numbers.every(n => n)) spinRoulette(Math.floor(Math.random() * 12) + 1);
+}, 5000); // Тестовая задержка
