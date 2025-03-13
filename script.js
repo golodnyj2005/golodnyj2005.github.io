@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const numbersGrid = document.getElementById("numbers-grid");
     const startButton = document.getElementById("start-roulette");
 
+    let selectedNumbers = [];
+
     // Создаем сетку номеров
     for (let i = 1; i <= 12; i++) {
         const numberDiv = document.createElement("div");
@@ -10,8 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
         numberDiv.addEventListener("click", () => selectNumber(i));
         numbersGrid.appendChild(numberDiv);
     }
-
-    let selectedNumbers = [];
 
     function selectNumber(number) {
         if (selectedNumbers.includes(number)) return;
@@ -40,21 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     startButton.addEventListener("click", () => {
+        // Отправляем запрос на запуск рулетки
         Telegram.WebApp.sendData(JSON.stringify({ action: "start_roulette" }));
     });
-
-    // Обработка данных от бэкенда
-    Telegram.WebApp.onEvent("mainButtonClicked", () => {
-        console.log("Main button clicked");
-    });
 });
-
-function spinRoulette(winningNumber) {
-    const rouletteWheel = document.getElementById("roulette-wheel");
-    rouletteWheel.classList.add("spinning");
-
-    setTimeout(() => {
-        rouletteWheel.classList.remove("spinning");
-        alert(`Победил номер ${winningNumber}!`);
-    }, 3000);
-}
