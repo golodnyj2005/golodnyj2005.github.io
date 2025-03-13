@@ -1,67 +1,73 @@
 body {
-    background-color: #121212;
+    background: #1a1a1a;
     color: #fff;
     font-family: Arial, sans-serif;
     text-align: center;
+    margin: 0;
     padding: 20px;
 }
 
-.container {
-    max-width: 600px;
-    margin: 0 auto;
+h1 {
+    font-size: 2em;
+    color: #ffcc00;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-#roulette-wheel {
+.roulette {
     width: 300px;
     height: 300px;
-    margin: 20px auto;
-    border: 5px solid #ffcc00;
     border-radius: 50%;
+    background: #2f2f2f;
+    margin: 20px auto;
     position: relative;
-    background: conic-gradient(#ff4d4d, #ffcc00, #4d94ff, #ff4d4d);
+    overflow: hidden;
+    border: 5px solid #4a2c1f;
 }
 
-#number-selection {
-    margin-top: 20px;
+.roulette::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: repeating-conic-gradient(#4a2c1f 0deg 30deg, #2f2f2f 30deg 60deg);
 }
 
-#numbers-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+.arrow {
+    width: 20px;
+    height: 60px;
+    background: #ff4444;
+    position: absolute;
+    top: -10px;
+    left: 140px;
+    transform-origin: bottom;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    z-index: 10;
+}
+
+.numbers {
+    display: flex;
+    flex-wrap: wrap;
     gap: 10px;
+    justify-content: center;
+    max-width: 400px;
+    margin: 20px auto;
 }
 
 .number {
-    width: 60px;
-    height: 60px;
-    line-height: 60px;
-    background-color: #333;
-    border: 2px solid #555;
-    border-radius: 10px;
+    padding: 15px;
+    background: #444;
     cursor: pointer;
-    transition: transform 0.2s, background-color 0.2s;
+    border-radius: 5px;
+    width: 40px;
+    text-align: center;
+    transition: background 0.3s;
 }
 
 .number:hover {
-    transform: scale(1.1);
+    background: #666;
 }
 
-.number.selected {
-    background-color: #ffcc00;
-    color: #000;
+.number.taken {
+    background: #888;
     cursor: not-allowed;
-}
-
-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #ffcc00;
-    color: #000;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:disabled {
-    background-color: #ccc;
 }
