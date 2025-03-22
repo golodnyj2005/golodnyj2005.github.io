@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
     const numbersGrid = document.getElementById("numbers-grid");
     const startButton = document.getElementById("start-roulette");
+    const spinSound = document.getElementById("spin-sound");
+    const selectSound = document.getElementById("select-sound");
+    const counterElement = document.getElementById("counter");
 
     let selectedNumbers = [];
 
@@ -18,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         selectedNumbers.push(number);
         updateUI();
+        selectSound.play(); // Проигрываем звук выбора
 
         // Отправляем выбор на бэкенд через Telegram Web App API
         Telegram.WebApp.sendData(JSON.stringify({ action: "select_number", number }));
@@ -34,6 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
+        counterElement.textContent = selectedNumbers.length;
+
         if (selectedNumbers.length === 12) {
             startButton.disabled = false;
         }
@@ -45,6 +51,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         wheel.style.transition = "transform 3s ease-out";
         wheel.style.transform = `rotateX(60deg) rotateZ(${randomRotation}deg)`;
+
+        spinSound.play(); // Проигрываем звук вращения
 
         setTimeout(() => {
             wheel.style.transition = "none";
