@@ -14,8 +14,10 @@ body {
 
 /* Стиль для рулетки */
 #roulette-wheel {
-    width: 300px; /* Фиксированная ширина */
-    height: 300px; /* Фиксированная высота */
+    width: 90vmin; /* Адаптивный размер */
+    height: 90vmin;
+    max-width: 300px;
+    max-height: 300px;
     margin: 20px auto;
     border: 5px solid #ffcc00; /* Жёлтая рамка */
     border-radius: 50%; /* Округление углов для круга */
@@ -23,17 +25,17 @@ body {
     background: conic-gradient(
         from 0deg,
         #ff4d4d, /* Красный градиент */
-        #ff4d4d 15deg,
+        #ff6666 15deg,
         #333 15deg, /* Черный градиент */
-        #333 30deg
+        #444 30deg
     );
     background-size: 100% 100%;
     box-shadow: 
-        0 0 20px rgba(255, 204, 0, 0.8), /* Внешняя подсветка */
-        inset 0 0 20px rgba(255, 204, 0, 0.8); /* Внутренняя подсветка */
+        0 0 30px rgba(255, 204, 0, 0.8), /* Внешняя подсветка */
+        inset 0 0 30px rgba(255, 204, 0, 0.8); /* Внутренняя подсветка */
     transform-style: preserve-3d;
     transform: rotateX(60deg) rotateZ(0deg);
-    transition: transform 1s ease-in-out;
+    transition: transform 2s ease-in-out;
 }
 
 /* Центральная точка */
@@ -44,10 +46,10 @@ body {
     left: 50%;
     width: 20px;
     height: 20px;
-    background-color: #ffcc00;
+    background: radial-gradient(circle, #ffcc00, #ff9900);
     border-radius: 50%;
     transform: translate(-50%, -50%);
-    box-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+    box-shadow: 0 0 15px rgba(255, 204, 0, 0.8);
 }
 
 /* Стиль для выбора номеров */
@@ -69,40 +71,53 @@ body {
     border: 2px solid #555;
     border-radius: 10px;
     cursor: pointer;
-    transition: transform 0.2s, background-color 0.2s;
+    transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
     text-align: center;
     font-size: 18px;
     color: #fff;
+    box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
 }
 
 .number:hover {
     transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.8);
 }
 
 .number.selected {
-    background-color: #ffcc00;
+    background: linear-gradient(to bottom, #ffcc00, #ff9900);
     color: #000;
     cursor: not-allowed;
+    box-shadow: 0 0 15px rgba(255, 204, 0, 0.8);
+}
+
+/* Счетчик выбранных номеров */
+#selected-counter {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #ffcc00;
 }
 
 /* Стиль кнопки */
 button {
     margin-top: 20px;
     padding: 10px 20px;
-    background-color: #ffcc00;
+    background: linear-gradient(to bottom, #ffcc00, #ff9900);
     color: #000;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s;
+    transition: background 0.3s, box-shadow 0.3s;
+    box-shadow: 0 0 15px rgba(255, 204, 0, 0.8);
 }
 
 button:hover {
-    background-color: #e6b800;
+    background: linear-gradient(to bottom, #ff9900, #ff6600);
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.8);
 }
 
 button:disabled {
-    background-color: #ccc;
+    background: #ccc;
     cursor: not-allowed;
+    box-shadow: none;
 }
