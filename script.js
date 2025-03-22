@@ -21,6 +21,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         selectedNumbers.push(number);
         updateUI();
+
+        // Перезапускаем аудио перед воспроизведением
+        selectSound.currentTime = 0; // Сбрасываем позицию воспроизведения
         selectSound.play(); // Проигрываем звук выбора
 
         // Отправляем выбор на бэкенд через Telegram Web App API
@@ -52,6 +55,8 @@ document.addEventListener("DOMContentLoaded", () => {
         wheel.style.transition = "transform 3s ease-out";
         wheel.style.transform = `rotateX(60deg) rotateZ(${randomRotation}deg)`;
 
+        // Перезапускаем аудио перед воспроизведением
+        spinSound.currentTime = 0; // Сбрасываем позицию воспроизведения
         spinSound.play(); // Проигрываем звук вращения
 
         setTimeout(() => {
