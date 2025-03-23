@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const numbersGrid = document.getElementById("numbers-grid");
     const startButton = document.getElementById("start-roulette");
     const spinSound = document.getElementById("spin-sound");
@@ -11,6 +11,50 @@ document.addEventListener("DOMContentLoaded", () => {
     // Проверяем, что мы находимся в Telegram Web App
     if (window.Telegram && window.Telegram.WebApp) {
         Telegram.WebApp.ready(); // Сообщаем Telegram, что приложение загружено
+    }
+
+    // Получаем состояние игры с бэкенда
+    async function fetchGameState() {
+        try {
+            const response = await fetch("https://your-backend-url.com/game-state");
+            const gameState = await response.json();
+
+            // Обновляем интерфейс
+            updateGameState(gameState);
+        } catch (error) {
+            console.error("Ошибка при получении состояния игры:", error);
+        }
+    }
+
+    function updateGameState(gameState) {
+        const allNumbers = document.querySelectorAll(".number");
+
+        // Подсвечиваем выбранные номера
+        allNumbers.forEach((numDiv) => {
+            const num = parseInt(numDiv.textContent);
+            if (gameState.selected_numbers.includes(num)) {
+                numDiv.classList.add("selected");
+            } else {
+                numDiv.classList.remove("selected");
+            }
+        });
+
+        // Показываем выигрышный номер
+        if (gameState.winner_number) {
+            highlightWinnerNumber(gameState.winner_number);
+            winnerMessage.textContent = `Выигрышный номер: ${gameState.winner_number}`;
+        }
+    }
+
+    function highlightWinnerNumber(winnerNumber) {
+        const allNumbers = document.querySelectorAll(".number");
+        allNumbers.forEach((numDiv) => {
+            const num = parseInt(numDiv.textContent);
+            if (num === winnerNumber) {
+                numDiv.style.backgroundColor = "#ffcc00";
+                numDiv.style.color = "#000";
+            }
+        });
     }
 
     // Создаем сетку номеров
@@ -75,10 +119,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Обработка данных от бэкенда
-    window.Telegram.WebApp.onEvent("mainButtonClicked", () => {
-        alert("Кнопка Telegram нажата!");
-    });
-
     window.Telegram.WebApp.onEvent("dataReceived", (data) => {
         const parsedData = JSON.parse(data);
         if (parsedData.action === "announce_winner") {
@@ -88,14 +128,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    function highlightWinnerNumber(winnerNumber) {
-        const allNumbers = document.querySelectorAll(".number");
-        allNumbers.forEach((numDiv) => {
-            const num = parseInt(numDiv.textContent);
-            if (num === winnerNumber) {
-                numDiv.style.backgroundColor = "#ffcc00";
-                numDiv.style.color = "#000";
-            }
-        });
-    }
+    // Инициализация: получаем состояние игры
+    fetchGameState();
 });
