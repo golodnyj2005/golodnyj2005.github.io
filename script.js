@@ -4,8 +4,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const spinSound = document.getElementById("spin-sound");
     const selectSound = document.getElementById("select-sound");
     const counterElement = document.getElementById("counter");
+    const winnerMessage = document.getElementById("winner-message");
 
     let selectedNumbers = [];
+
+    // Проверяем, что мы находимся в Telegram Web App
+    if (window.Telegram && window.Telegram.WebApp) {
+        Telegram.WebApp.ready(); // Сообщаем Telegram, что приложение загружено
+    }
 
     // Создаем сетку номеров
     for (let i = 1; i <= 12; i++) {
@@ -17,17 +23,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function selectNumber(number) {
-        if (selectedNumbers.includes(number)) return;
+        if (selectedNumbers.length >= 3 || selectedNumbers.includes(number)) return;
 
         selectedNumbers.push(number);
         updateUI();
 
-        // Перезапускаем аудио перед воспроизведением
-        selectSound.currentTime = 0; // Сбрасываем позицию воспроизведения
-        selectSound.play(); // Проигрываем звук выбора
-
-        // Отправляем выбор на бэкенд через Telegram Web App API
+        // Отправляем выбор на бэкенд
         Telegram.WebApp.sendData(JSON.stringify({ action: "select_number", number }));
+
+        // Проигрываем звук выбора
+        selectSound.currentTime = 0;
+        selectSound.play();
     }
 
     function updateUI() {
@@ -43,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         counterElement.textContent = selectedNumbers.length;
 
-        if (selectedNumbers.length === 12) {
+        if (selectedNumbers.length === 3) {
             startButton.disabled = false;
         }
     }
@@ -55,9 +61,9 @@ document.addEventListener("DOMContentLoaded", () => {
         wheel.style.transition = "transform 3s ease-out";
         wheel.style.transform = `rotateX(60deg) rotateZ(${randomRotation}deg)`;
 
-        // Перезапускаем аудио перед воспроизведением
-        spinSound.currentTime = 0; // Сбрасываем позицию воспроизведения
-        spinSound.play(); // Проигрываем звук вращения
+        // Проигрываем звук вращения
+        spinSound.currentTime = 0;
+        spinSound.play();
 
         setTimeout(() => {
             wheel.style.transition = "none";
@@ -67,4 +73,29 @@ document.addEventListener("DOMContentLoaded", () => {
         // Отправляем запрос на запуск рулетки
         Telegram.WebApp.sendData(JSON.stringify({ action: "start_roulette" }));
     });
+
+    // Обработка данных от бэкенда
+    window.Telegram.WebApp.onEvent("mainButtonClicked", () => {
+        alert("Кнопка Telegram нажата!");
+    });
+
+    window.Telegram.WebApp.onEvent("dataReceived", (data) => {
+        const parsedData = JSON.parse(data);
+        if (parsedData.action === "announce_winner") {
+            const winnerNumber = parsedData.winner_number;
+            winnerMessage.textContent = `Выигрышный номер: ${winnerNumber}`;
+            highlightWinnerNumber(winnerNumber);
+        }
+    });
+
+    function highlightWinnerNumber(winnerNumber) {
+        const allNumbers = document.querySelectorAll(".number");
+        allNumbers.forEach((numDiv) => {
+            const num = parseInt(numDiv.textContent);
+            if (num === winnerNumber) {
+                numDiv.style.backgroundColor = "#ffcc00";
+                numDiv.style.color = "#000";
+            }
+        });
+    }
 });
