@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Получаем состояние игры с бэкенда
     async function fetchGameState() {
         try {
-            const response = await fetch("http://127.0.0.1:8000/game-state"); // URL вашего FastAPI сервера
+            const response = await fetch("http://176.15.241.147:8080/game-state"); // URL вашего FastAPI сервера
             const gameState = await response.json();
 
             // Обновляем интерфейс
