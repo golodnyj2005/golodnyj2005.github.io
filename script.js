@@ -68,7 +68,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         updateUI();
 
         // Отправляем выбор на бэкенд
-        Telegram.WebApp.sendData(JSON.stringify({ action: "select_number", number }));
+        const data = JSON.stringify({ action: "select_number", number });
+        Telegram.WebApp.sendData(data);
 
         // Проигрываем звук выбора
         selectSound.currentTime = 0;
