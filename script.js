@@ -8,15 +8,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let selectedNumbers = [];
 
-    // Проверяем, что мы находимся в Telegram Web App
-    if (window.Telegram && window.Telegram.WebApp) {
-        Telegram.WebApp.ready(); // Сообщаем Telegram, что приложение загружено
-    }
-
     // Получаем состояние игры с бэкенда
     async function fetchGameState() {
         try {
-            const response = await fetch("https://your-backend-url.com/game-state");
+            const response = await fetch("http://127.0.0.1:8000/game-state"); // URL вашего FastAPI сервера
             const gameState = await response.json();
 
             // Обновляем интерфейс
@@ -116,16 +111,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Отправляем запрос на запуск рулетки
         Telegram.WebApp.sendData(JSON.stringify({ action: "start_roulette" }));
-    });
-
-    // Обработка данных от бэкенда
-    window.Telegram.WebApp.onEvent("dataReceived", (data) => {
-        const parsedData = JSON.parse(data);
-        if (parsedData.action === "announce_winner") {
-            const winnerNumber = parsedData.winner_number;
-            winnerMessage.textContent = `Выигрышный номер: ${winnerNumber}`;
-            highlightWinnerNumber(winnerNumber);
-        }
     });
 
     // Инициализация: получаем состояние игры
